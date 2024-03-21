@@ -97,7 +97,9 @@ void main() {
       expect(() => PhoneNumber.fromCompleteNumber(completeNumber: "+44abcdef1"),
           throwsA(const TypeMatcher<InvalidCharactersException>()));
     });
+  });
 
+  group('ValidationRules', () {
     test('Check valid Belarus number +375299763143', () {
       PhoneNumber phoneNumber = PhoneNumber.fromCompleteNumber(completeNumber: "+375299763143");
       expect(phoneNumber.countryISOCode, "BY");
@@ -128,6 +130,28 @@ void main() {
           MaxLengthError(
             maxLength: 9,
           ));
+    });
+
+    test('Number prefix is valid', () {
+      PhoneNumber phoneNumber = PhoneNumber.fromCompleteNumber(completeNumber: "+77001234565");
+      expect(phoneNumber.countryISOCode, "KZ");
+      expect(phoneNumber.countryCode, "7");
+      expect(phoneNumber.number, "7001234565");
+      expect(
+        phoneNumber.validate(),
+        null,
+      );
+    });
+
+    test('Number prefix is invalid', () {
+      PhoneNumber phoneNumber = PhoneNumber.fromCompleteNumber(completeNumber: "+78001234565");
+      expect(phoneNumber.countryISOCode, "KZ");
+      expect(phoneNumber.countryCode, "7");
+      expect(phoneNumber.number, "8001234565");
+      expect(
+        phoneNumber.validate(),
+        InvalidPrefixError(expectedPrefix: '7'),
+      );
     });
   });
 }

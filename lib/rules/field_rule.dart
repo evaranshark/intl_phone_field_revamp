@@ -37,3 +37,20 @@ class MaxLength implements FieldRule {
     );
   }
 }
+
+class StartsWith implements FieldRule {
+  final String prefix;
+
+  const StartsWith({
+    required this.prefix,
+  });
+
+  @override
+  InvalidPrefixError? validate(String value) {
+    final regexp = RegExp('^$prefix');
+    if (regexp.hasMatch(value)) {
+      return null;
+    }
+    return InvalidPrefixError(expectedPrefix: prefix);
+  }
+}

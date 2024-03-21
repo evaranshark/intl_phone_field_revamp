@@ -48,4 +48,26 @@ class MaxLengthError implements ValidationError {
   }
 }
 
-class ValueIsNullError implements ValidationError {}
+class InvalidPrefixError implements ValidationError {
+  final String expectedPrefix;
+  final String? actualPrefix;
+
+  InvalidPrefixError({
+    required this.expectedPrefix,
+    this.actualPrefix,
+  });
+
+  @override
+  // ignore: hash_and_equals
+  bool operator ==(Object other) {
+    if (other is InvalidPrefixError) {
+      return expectedPrefix == other.expectedPrefix;
+    }
+    return false;
+  }
+
+  @override
+  String toString() {
+    return 'InvalidPrefixError($expectedPrefix, $actualPrefix)';
+  }
+}
