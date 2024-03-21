@@ -1,4 +1,7 @@
+import 'package:intl_phone_field/rules/field_rule.dart';
+
 import 'countries.dart';
+import 'rules/validation_error.dart';
 
 class NumberTooLongException implements Exception {}
 
@@ -50,6 +53,23 @@ class PhoneNumber {
       throw NumberTooLongException();
     }
     return true;
+  }
+
+  ValidationError? validate() {
+    Country country = getCountry(completeNumber);
+    if (country.rules == null) {
+      if (isValidNumber() == true) {
+        return null;
+      }
+      return ValidationError();
+    }
+    for (FieldRule rule in country.rules!) {
+      final result = rule.validate(number);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
   }
 
   String get completeNumber {

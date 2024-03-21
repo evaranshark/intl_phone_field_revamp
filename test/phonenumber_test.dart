@@ -7,6 +7,7 @@
 
 //import 'package:flutter_test/flutter_test.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:intl_phone_field/rules/validation_error.dart';
 import 'package:test/test.dart';
 import 'package:intl_phone_field/phone_number.dart';
 
@@ -95,6 +96,38 @@ void main() {
     test('create alpha character in  PhoneNumber from +44abcdef1', () {
       expect(() => PhoneNumber.fromCompleteNumber(completeNumber: "+44abcdef1"),
           throwsA(const TypeMatcher<InvalidCharactersException>()));
+    });
+
+    test('Check valid Belarus number +375299763143', () {
+      PhoneNumber phoneNumber = PhoneNumber.fromCompleteNumber(completeNumber: "+375299763143");
+      expect(phoneNumber.countryISOCode, "BY");
+      expect(phoneNumber.countryCode, "375");
+      expect(phoneNumber.number, "299763143");
+      expect(phoneNumber.validate(), null);
+    });
+
+    test('Check too short Belarus number +37529973143', () {
+      PhoneNumber phoneNumber = PhoneNumber.fromCompleteNumber(completeNumber: "+37529973143");
+      expect(phoneNumber.countryISOCode, "BY");
+      expect(phoneNumber.countryCode, "375");
+      expect(phoneNumber.number, "29973143");
+      expect(
+          phoneNumber.validate(),
+          MinLengthError(
+            minLength: 9,
+          ));
+    });
+
+    test('Check too long Belarus number +3752997314333', () {
+      PhoneNumber phoneNumber = PhoneNumber.fromCompleteNumber(completeNumber: "+3752997314333");
+      expect(phoneNumber.countryISOCode, "BY");
+      expect(phoneNumber.countryCode, "375");
+      expect(phoneNumber.number, "2997314333");
+      expect(
+          phoneNumber.validate(),
+          MaxLengthError(
+            maxLength: 9,
+          ));
     });
   });
 }

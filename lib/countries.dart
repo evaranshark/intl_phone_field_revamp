@@ -1,6 +1,8 @@
 // see: https://en.wikipedia.org/wiki/List_of_country_calling_codes
 // for list of country/calling codes
 
+import 'rules/field_rule.dart';
+
 const List<Country> countries = [
   Country(
     name: "Afghanistan",
@@ -652,6 +654,10 @@ const List<Country> countries = [
     dialCode: "375",
     minLength: 10,
     maxLength: 10,
+    rules: [
+      MinLength(minLength: 9),
+      MaxLength(maxLength: 9),
+    ],
   ),
   Country(
     name: "Belgium",
@@ -7545,6 +7551,7 @@ class Country {
   final String regionCode;
   final int minLength;
   final int maxLength;
+  final List<FieldRule>? rules;
 
   const Country({
     required this.name,
@@ -7555,6 +7562,7 @@ class Country {
     required this.minLength,
     required this.maxLength,
     this.regionCode = "",
+    this.rules,
   });
 
   String get fullCountryCode {

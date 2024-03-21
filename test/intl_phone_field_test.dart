@@ -60,4 +60,17 @@ void main() {
     expect(countryCodeFinder, findsOneWidget);
     expect(numberFinder, findsOneWidget);
   });
+
+  testWidgets('Test intl_phone_field setup with Belarus number: +375299763143', (WidgetTester tester) async {
+    await tester.pumpWidget(const TestWidget(
+      phoneNumber: '+375299763143',
+      countryCode: 'BY',
+    ));
+
+    final countryCodeFinder = find.text('+375');
+    final numberFinder = find.text('299763143');
+
+    expect(countryCodeFinder, findsOneWidget);
+    expect(numberFinder, findsOneWidget);
+  });
 }

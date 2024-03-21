@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/helpers.dart';
+import 'package:intl_phone_field/rules/validation_error.dart';
 
 import './countries.dart';
 import './phone_number.dart';
@@ -249,6 +250,8 @@ class IntlPhoneField extends StatefulWidget {
   /// If null, default magnification configuration will be used.
   final TextMagnifierConfiguration? magnifierConfiguration;
 
+  final Function(ValidationError?)? onValidationError;
+
   const IntlPhoneField({
     Key? key,
     this.formFieldKey,
@@ -296,6 +299,7 @@ class IntlPhoneField extends StatefulWidget {
     this.pickerDialogStyle,
     this.flagsButtonMargin = EdgeInsets.zero,
     this.magnifierConfiguration,
+    this.onValidationError,
   }) : super(key: key);
 
   @override
@@ -421,7 +425,13 @@ class _IntlPhoneFieldState extends State<IntlPhoneField> {
         );
 
         if (widget.autovalidateMode != AutovalidateMode.disabled) {
-          validatorMessage = await widget.validator?.call(phoneNumber);
+          if (widget.onValidationError != null) {
+            widget.onValidationError!.call(
+              phoneNumber.validate(),
+            );
+          } else {
+            validatorMessage = await widget.validator?.call(phoneNumber);
+          }
         }
 
         widget.onChanged?.call(phoneNumber);
